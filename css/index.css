@@ -16,4 +16,12 @@
 
 .main-button {
 	background-color: var(--red-cover-pink);
+	border: 1px solid var(--red-rose);
+	border-radius: 100px;
+}
+
+.main-button-outline {
+	background-color: var(--primary);
+	border: 1px solid var(--red-rose);
+	border-radius: 100px;
 }
