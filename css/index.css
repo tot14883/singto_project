@@ -1,3 +1,19 @@
-.text-header {
+@import "color.css";
+@import "font.css";
 
+
+.text-nav-bar {
+	font-size: var(--header2);
+	font-weight: 700;
+	color: #fff;
+}
+
+.text-header {
+	font-size: var(--header1);
+	font-weight: 700;
+	color: #fff;
+}
+
+.main-button {
+	background-color: var(--red-cover-pink);
 }
