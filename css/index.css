@@ -1,6 +1,9 @@
 @import "color.css";
 @import "font.css";
 
+body {
+	background-color: var(--primary);
+}
 
 .text-nav-bar {
 	font-size: var(--header2);
@@ -24,4 +27,24 @@
 	background-color: var(--primary);
 	border: 1px solid var(--red-rose);
 	border-radius: 100px;
+}
+
+.btn-button-primary {
+	color: #fff;
+	background-color: var(--primary);
+	border-radius: 100px;
+}
+
+.input-field {
+	width: 100%;
+  padding: 8px 29px;
+  border: 1px solid var(--blue-ocean);
+  border-radius: 100px;
+  box-sizing: border-box;
+	background-color: var(--primary);
+}
+
+input,
+input::-webkit-input-placeholder {
+    font-size: 20px;
 }

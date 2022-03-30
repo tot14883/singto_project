@@ -14,7 +14,6 @@
 	<title>Class room</title>
 
 	<style>
-
 		.nav-bar {
 			background-color: var(--primary);
 			border-bottom: 1px solid var(--blue-ocean);
@@ -46,6 +45,14 @@
 			margin-top: 32px;
 		}
 
+		.field-firstname{
+			margin-top: 32px;
+		}
+
+		.field-lastname{
+			margin-top: 32px;
+		}
+
 		.btn-login {
 			font-size: 13px;
 			width: 173px;
@@ -61,6 +68,39 @@
 			margin-top: 22px;
 			padding: 12px 57px;
 		}
+
+		.title {
+			font-size: var(--font-20);
+			font-weight: 700;
+			color: #fff;
+		}
+
+		.modal {
+			display: none; /* Hidden by default */
+			position: fixed; /* Stay in place */
+			z-index: 1; /* Sit on top */
+			padding-top: 100px; /* Location of the box */
+			left: 0;
+			top: 0;
+			width: 100%; /* Full width */
+			height: 100%; /* Full height */
+			overflow: auto; /* Enable scroll if needed */
+			background-color: rgb(0,0,0); /* Fallback color */
+			background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+		}
+
+		/* Modal Content */
+		.modal-content {
+			width: 291px;
+			background-color: var(--red-rose);
+			margin: auto;
+			padding: 20px;
+			border: 1px solid var(--red-cover-pink);
+		}
+
+		.btn-modal {
+			padding: 8px 34px;
+		}
 	</style>
 
 </head>
@@ -70,14 +110,43 @@
 			<div class="flex-grow-1 text-nav-bar">Classroom</div>
 		</div>
 		<div class="d-flex flex-column justify-content-center login-box">
-			<div class="text-header">LOGIN</div>
-			<form class="d-flex flex-column align-items-center">
+			<div class="text-header">Register</div>
+			<!-- <form class="d-flex flex-column align-items-center"> -->
 				<input class="input-field field-email" placeholder="Email"/>
 				<input class="input-field field-password" placeholder="Password"/>
+				<input class="input-field field-firstname" placeholder="First name"/>
+				<input class="input-field field-lastname" placeholder="Last name"/>
 				<input type="submit" class="main-button btn-login" value="login"/>
-				<input type="submit" class="main-button-outline btn-register" value="register"/>
-			</form>
+				<input type="submit" id="myBtn" class="main-button-outline btn-register" value="register"/>
+			<!-- </form> -->
 		</div>
 	</div>
+	<div id="myModal" class="modal">
+		<!-- Modal content -->
+		<div class="modal-content">
+			<div class="title text-center">
+				register success
+			</div>
+			<div class="mt-2"></div>
+			<div class="d-flex flex-column">
+				<div class="d-flex justify-content-center">
+						<div class="btn-button-primary btn-modal">login</div>
+						<div class="m-1"></div>
+						<div class="btn-button-primary btn-modal" id="close">close</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		$("#myBtn").click(function() {
+			$('.modal').css('display', 'block');
+		});
+
+		$("#close").click(function() {
+			$('.modal').css('display', 'none');
+		});
+
+	</script>
 </body>
 </html>
