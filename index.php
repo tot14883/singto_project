@@ -36,6 +36,7 @@
 
 		.input-field {
 			width: 550px;
+			color: lightgray;
 		}
 
 		.field-email{
