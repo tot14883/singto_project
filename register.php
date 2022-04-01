@@ -25,8 +25,6 @@
 
 			margin: 85px auto;
 			padding-bottom: 48px;
-			background-color: var(--primary);
-			border: 1px solid var(--blue-ocean);
 		}
 
 		.text-header {
@@ -109,7 +107,7 @@
 		<div class="d-flex text-center nav-bar">
 			<div class="flex-grow-1 text-nav-bar">Classroom</div>
 		</div>
-		<div class="d-flex flex-column justify-content-center login-box">
+		<div class="d-flex flex-column justify-content-center login-box box-primary">
 			<div class="text-header">Register</div>
 			<!-- <form class="d-flex flex-column align-items-center"> -->
 				<input class="input-field field-email" placeholder="Email"/>
@@ -129,7 +127,7 @@
 			</div>
 			<div class="mt-2"></div>
 			<div class="d-flex flex-column">
-				<div class="d-flex justify-content-center">
+				<div class="d-flex justify-content-center align-items-center">
 						<div class="btn-button-primary btn-modal">login</div>
 						<div class="m-1"></div>
 						<div class="btn-button-primary btn-modal" id="close">close</div>

@@ -48,3 +48,12 @@ input,
 input::-webkit-input-placeholder {
     font-size: 20px;
 }
+
+.image-fit-width {
+	object-fit: cover;
+}
+
+.box-primary {
+	border: 1px solid var(--blue-ocean);
+	background-color: var(--primary);
+}
