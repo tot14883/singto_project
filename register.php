@@ -33,6 +33,7 @@
 
 		.input-field {
 			width: 550px;
+			color: lightgrey;
 		}
 
 		.field-email{
@@ -110,12 +111,12 @@
 		<div class="d-flex flex-column justify-content-center login-box box-primary">
 			<div class="text-header">Register</div>
 			<!-- <form class="d-flex flex-column align-items-center"> -->
-				<input class="input-field field-email" placeholder="Email"/>
-				<input class="input-field field-password" placeholder="Password"/>
-				<input class="input-field field-firstname" placeholder="First name"/>
-				<input class="input-field field-lastname" placeholder="Last name"/>
+				<input type="email" class="input-field field-email" placeholder="Email"/>
+				<input type="password" class="input-field field-password" placeholder="Password"/>
+				<input type="text" class="input-field field-firstname" placeholder="First name"/>
+				<input type="text" class="input-field field-lastname" placeholder="Last name"/>
 				<input type="submit" class="main-button btn-login" value="login"/>
-				<input type="submit" id="myBtn" class="main-button-outline btn-register" value="register"/>
+				<a href="/register.php" id="myBtn" class="main-button-outline btn-register" value="register">
 			<!-- </form> -->
 		</div>
 	</div>
