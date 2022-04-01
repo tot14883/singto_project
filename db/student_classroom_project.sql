@@ -32,6 +32,7 @@ CREATE TABLE `assignment` (
   `description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `upload_file` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `classroom_id` bigint(20) UNSIGNED NOT NULL,
+  `due_date` timestamp NULL DEFAULT NULL,
   `created_by` bigint(20) UNSIGNED NOT NULL,
   `updated_by` bigint(20) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,

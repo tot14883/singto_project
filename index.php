@@ -72,11 +72,11 @@
 		</div>
 		<div class="d-flex flex-column justify-content-center login-box">
 			<div class="text-header">LOGIN</div>
-			<form class="d-flex flex-column align-items-center">
-				<input class="input-field field-email" placeholder="Email"/>
-				<input class="input-field field-password" placeholder="Password"/>
+			<form class="d-flex flex-column align-items-center" action = "./get-login.php" method = "post">
+				<input type="email" name="email" class="input-field field-email" placeholder="Email"/>
+				<input type="password" name="password" class="input-field field-password" placeholder="Password"/>
 				<input type="submit" class="main-button btn-login" value="login"/>
-				<input type="submit" class="main-button-outline btn-register" value="register"/>
+				<a href="./register.php" class="main-button-outline btn-register text-decoration-none text-center">register</a>
 			</form>
 		</div>
 	</div>

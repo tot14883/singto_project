@@ -1,5 +1,10 @@
+<?php
+include("./db-connect.php");
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -14,7 +19,6 @@
 	<title>Class room</title>
 
 	<style>
-
 		.nav-bar {
 			background-color: var(--primary);
 			border-bottom: 1px solid var(--blue-ocean);
@@ -46,7 +50,7 @@
 			padding: 10px;
 		}
 
-		.grid-container > div {
+		.grid-container>div {
 			width: 334px;
 			background-color: var(--primary);
 			border: 1px solid var(--blue-ocean);
@@ -97,17 +101,26 @@
 		}
 
 		.modal {
-			display: none; /* Hidden by default */
-			position: fixed; /* Stay in place */
-			z-index: 1; /* Sit on top */
-			padding-top: 100px; /* Location of the box */
+			display: none;
+			/* Hidden by default */
+			position: fixed;
+			/* Stay in place */
+			z-index: 1;
+			/* Sit on top */
+			padding-top: 100px;
+			/* Location of the box */
 			left: 0;
 			top: 0;
-			width: 100%; /* Full width */
-			height: 100%; /* Full height */
-			overflow: auto; /* Enable scroll if needed */
-			background-color: rgb(0,0,0); /* Fallback color */
-			background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+			width: 100%;
+			/* Full width */
+			height: 100%;
+			/* Full height */
+			overflow: auto;
+			/* Enable scroll if needed */
+			background-color: rgb(0, 0, 0);
+			/* Fallback color */
+			background-color: rgba(0, 0, 0, 0.4);
+			/* Black w/ opacity */
 		}
 
 		/* Modal Content */
@@ -125,17 +138,26 @@
 
 
 		.modal1 {
-			display: none; /* Hidden by default */
-			position: fixed; /* Stay in place */
-			z-index: 1; /* Sit on top */
-			padding-top: 100px; /* Location of the box */
+			display: none;
+			/* Hidden by default */
+			position: fixed;
+			/* Stay in place */
+			z-index: 1;
+			/* Sit on top */
+			padding-top: 100px;
+			/* Location of the box */
 			left: 0;
 			top: 0;
-			width: 100%; /* Full width */
-			height: 100%; /* Full height */
-			overflow: auto; /* Enable scroll if needed */
-			background-color: rgb(0,0,0); /* Fallback color */
-			background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+			width: 100%;
+			/* Full width */
+			height: 100%;
+			/* Full height */
+			overflow: auto;
+			/* Enable scroll if needed */
+			background-color: rgb(0, 0, 0);
+			/* Fallback color */
+			background-color: rgba(0, 0, 0, 0.4);
+			/* Black w/ opacity */
 		}
 
 		/* Modal Content */
@@ -219,7 +241,7 @@
 			font-size: 16px;
 			font-weight: 700;
 			color: #B5C4D3;
-			margin-left: 8px
+			margin-left: 8px;
 			text-overflow: ellipsis;
 			overflow: hidden;
 			white-space: nowrap;
@@ -227,11 +249,12 @@
 	</style>
 
 </head>
+
 <body>
 	<div class="container-content">
 		<div class="d-flex text-center nav-bar">
 			<div id="showSidebar" class="show-sidebar justify-content-center align-items-center align-self-center ml-2">
-				<img class="image-fit-width" src="imgs/align_left_free_icon_font.png" width="32" height="32"/>
+				<img class="image-fit-width" src="imgs/align_left_free_icon_font.png" width="32" height="32" />
 			</div>
 			<div class="flex-grow-1 text-nav-bar">Classroom</div>
 		</div>
@@ -239,24 +262,34 @@
 			<!-- Enrolled -->
 			<div class="d-flex flex-grow-1 justify-content-between justify-content-center align-items-center box-header">
 				<div class="text text-enrolled">Enrolled</div>
-				<input type="submit" class="main-button btn-create-class" id="btn-create-class" value="Create class"/>
+				<input type="submit" class="main-button btn-create-class" id="btn-create-class" value="Create class" />
 			</div>
 			<div class="grid-container">
-				<div class="item1">
-					<div class="d-flex flex-column">
-						<input type="submit" class="main-button btn-class-div" value="Join"/>
-						<div class="d-flex">
-							<div class="img-profile">
-								<img class="profile image-fit-width" src="imgs/circle.png" width="82" height="82"/>
+				<?php
+				$session_id = $_SESSION['id'] ?? 0;
+				$query = "SELECT * FROM classroom_user a LEFT JOIN classroom b ON a.classroom_id = b.id LEFT JOIN user c ON b.created_by = c.id WHERE a.user_id = 1";
+				$res = mysqli_query($con, $query);
+				if (!$res) {
+					printf("Error: %s\n", mysqli_error($con));
+					exit();
+				}
+				while ($row = mysqli_fetch_array($res)) { ?>
+					<div class="item_<?php echo $row['classroom_id']; ?>">
+						<div class="d-flex flex-column">
+							<input type="submit" class="main-button btn-class-div" value="Join" />
+							<div class="d-flex">
+								<div class="img-profile">
+									<img class="profile image-fit-width" src="<?php echo $row['class_image'] ?? 'imgs/circle.png'; ?>" width="82" height="82" />
+								</div>
+								<div class="d-flex flex-column  justify-content-center align-items-center subject-detail">
+									<div class="subject-code text-left"><?php echo $row['subject_number'] ?? '-'; ?></div>
+									<div class="subject-name text-left"><?php echo $row['classname'] ?? '-'; ?></div>
+								</div>
 							</div>
-							<div class="d-flex flex-column  justify-content-center align-items-center subject-detail">
-								<div class="subject-code text-left">935 002</div>
-								<div class="subject-name text-left">Introduction to e-Bu...Introduction to e-Bu...Introduction to e-Bu...</div>
-							</div>
+							<div class="subject-author"><?php echo $row['firstname'].' '.$row['firstname']?? '-'; ?></div>
 						</div>
-						<div class="subject-author">Kanda Sorn-in</div>
 					</div>
-				</div>
+				<?php } ?>
 			</div>
 
 			<!-- Classroom -->
@@ -266,10 +299,10 @@
 			<div class="grid-container">
 				<div class="item1">
 					<div class="d-flex flex-column">
-						<input type="submit" class="main-button btn-class-div" value="leave"/>
+						<input type="submit" class="main-button btn-class-div" value="leave" />
 						<div class="d-flex">
 							<div class="img-profile">
-								<img class="profile image-fit-width" src="imgs/circle.png" width="82" height="82"/>
+								<img class="profile image-fit-width" src="imgs/circle.png" width="82" height="82" />
 							</div>
 							<div class="d-flex flex-column  justify-content-center align-items-center subject-detail">
 								<div class="subject-code text-left">935 002</div>
@@ -289,10 +322,10 @@
 			<div class="grid-container">
 				<div class="item1">
 					<div class="d-flex flex-column">
-						<input type="submit" class="main-button btn-class-div" id="btn-join" value="Join"/>
+						<input type="submit" class="main-button btn-class-div" id="btn-join" value="Join" />
 						<div class="d-flex">
 							<div class="img-profile">
-								<img class="profile image-fit-width" src="imgs/circle.png" width="82" height="82"/>
+								<img class="profile image-fit-width" src="imgs/circle.png" width="82" height="82" />
 							</div>
 							<div class="d-flex flex-column  justify-content-center align-items-center subject-detail">
 								<div class="subject-code text-left">935 002</div>
@@ -315,7 +348,7 @@
 			<div class="mt-2"></div>
 			<div class="d-flex flex-column">
 				<div class="d-flex justify-content-center align-items-center">
-						<div class="btn-button-primary btn-modal btn-ok text-center" id="btn-ok">ok</div>
+					<div class="btn-button-primary btn-modal btn-ok text-center" id="btn-ok">ok</div>
 				</div>
 			</div>
 		</div>
@@ -329,21 +362,21 @@
 			</div>
 			<div class="mt-2"></div>
 			<div class="d-flex flex-column align-items-center">
-				<input class="input-field modal-field field-introduction" placeholder="Introduction to e-Business"/>
-				<input class="input-field modal-field field-code" placeholder="095432"/>
-				<input class="input-field modal-field field-room" placeholder="Room (not required)"/>
-				<input type="submit" class="main-button btn-create" value="create"/>
-				<input type="submit" class="main-button-outline btn-cancel" id="btn-cancel" value="cancel"/>
+				<input class="input-field modal-field field-introduction" placeholder="Introduction to e-Business" />
+				<input class="input-field modal-field field-code" placeholder="095432" />
+				<input class="input-field modal-field field-room" placeholder="Room (not required)" />
+				<input type="submit" class="main-button btn-create" value="create" />
+				<input type="submit" class="main-button-outline btn-cancel" id="btn-cancel" value="cancel" />
 			</div>
 		</div>
 	</div>
 
 	<div class="d-flex flex-column menubar">
 		<div id="hideSidebar" class="hide-sidebar align-self-end">
-			<img class="image-fit-width" src="imgs/align_left_free_icon_font.png" width="32" height="32"/>
+			<img class="image-fit-width" src="imgs/align_left_free_icon_font.png" width="32" height="32" />
 		</div>
 		<div class="img-profile align-self-center">
-			<img class="profile image-fit-width" src="imgs/circle.png" width="106" height="106"/>
+			<img class="profile image-fit-width" src="imgs/circle.png" width="106" height="106" />
 		</div>
 		<div class="text-name align-self-center">
 			chatchai prathammate
@@ -354,7 +387,7 @@
 		</div>
 		<div class="d-flex card-items justify-content-between justify-content-center align-items-center">
 			<div class="img-profile">
-				<img class="profile image-fit-width" src="imgs/circle.png" width="42" height="42"/>
+				<img class="profile image-fit-width" src="imgs/circle.png" width="42" height="42" />
 			</div>
 			<div class="subject-code-sidebar">
 				935 342
@@ -368,7 +401,7 @@
 		</div>
 		<div class="d-flex card-items justify-content-between justify-content-center align-items-center">
 			<div class="img-profile">
-				<img class="profile image-fit-width" src="imgs/circle.png" width="42" height="42"/>
+				<img class="profile image-fit-width" src="imgs/circle.png" width="42" height="42" />
 			</div>
 			<div class="subject-code-sidebar">
 				935 342
@@ -379,7 +412,7 @@
 		</div>
 		<div class="d-flex card-items justify-content-between justify-content-center align-items-center">
 			<div class="img-profile">
-				<img class="profile image-fit-width" src="imgs/circle.png" width="42" height="42"/>
+				<img class="profile image-fit-width" src="imgs/circle.png" width="42" height="42" />
 			</div>
 			<div class="subject-code-sidebar">
 				935 342
@@ -416,4 +449,5 @@
 		});
 	</script>
 </body>
+
 </html>

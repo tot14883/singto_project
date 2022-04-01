@@ -110,14 +110,15 @@
 		</div>
 		<div class="d-flex flex-column justify-content-center login-box box-primary">
 			<div class="text-header">Register</div>
-			<!-- <form class="d-flex flex-column align-items-center"> -->
-				<input type="email" class="input-field field-email" placeholder="Email"/>
-				<input type="password" class="input-field field-password" placeholder="Password"/>
-				<input type="text" class="input-field field-firstname" placeholder="First name"/>
-				<input type="text" class="input-field field-lastname" placeholder="Last name"/>
-				<input type="submit" class="main-button btn-login" value="login"/>
-				<a href="/register.php" id="myBtn" class="main-button-outline btn-register" value="register">
-			<!-- </form> -->
+			<form class="d-flex flex-column align-items-center" action = "./get-register.php" method="post">
+				<input type="email" name="email" class="input-field field-email" placeholder="Email"/>
+				<input type="password" name="password" class="input-field field-password" placeholder="Password"/>
+				<input type="password" name="confirmpassword" class="input-field field-password" placeholder="Confirm Password"/>
+				<input type="text" name="firstname" class="input-field field-firstname" placeholder="Firstname"/>
+				<input type="text" name="lastname" class="input-field field-lastname" placeholder="Lastname"/>
+				<input type="submit" class="main-button btn-login" value="Register"/>
+				<a href="./index.php" class="main-button-outline btn-register text-decoration-none text-center">Login</a>
+			</form>
 		</div>
 	</div>
 	<div id="myModal" class="modal">

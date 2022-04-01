@@ -467,7 +467,7 @@
 			font-size: 16px;
 			font-weight: 700;
 			color: #B5C4D3;
-			margin-left: 8px
+			margin-left: 8px;
 			text-overflow: ellipsis;
 			overflow: hidden;
 			white-space: nowrap;
@@ -596,7 +596,7 @@
 											</div>
 										</div>
 										<div class="comment-message">
-											hello my name is cahtchai prathammate project class room i’m live in udon
+											hello my name is cahtchai prathammate project class room i’m live in udon
 										</div>
 									</div>
 								</div>
