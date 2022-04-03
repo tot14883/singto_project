@@ -245,7 +245,7 @@ if(!isset($_SESSION["id"])) {
 			font-size: 16px;
 			font-weight: 700;
 			color: #B5C4D3;
-			margin-left: 8px
+			margin-left: 8px;
 			text-overflow: ellipsis;
 			overflow: hidden;
 			white-space: nowrap;
