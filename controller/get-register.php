@@ -1,4 +1,4 @@
-<?php 
+<?php
     include("./db-connect.php");
     session_start();
     $firstname = $_POST["firstname"];
@@ -20,18 +20,18 @@
             $query = "INSERT INTO user VALUES ('', '$firstname', '$lastname', '$email', '$password', '$date', '$date')";
             mysqli_query($con, $query);
             echo '<script>alert("Registeration Complete!");
-                    window.location = "./index.php";</script>';
+                    window.location = "../index.php";</script>';
                     exit;
         }
         else {
             echo '<script>alert("Password do not match");
-                    window.location = "./register.php";</script>';
+                    window.location = "../register.php";</script>';
                     exit;
         }
     }
     else if ($rowcheck['email'] == $email){
         echo '<script>alert("This email already exist!");
-                window.location = "./register.php";</script>';
+                window.location = "../register.php";</script>';
                 exit;
     }
 ?>

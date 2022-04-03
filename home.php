@@ -1,6 +1,32 @@
 <?php
-include("./db-connect.php");
+include("./controller/db-connect.php");
 session_start();
+
+if(!isset($_SESSION["id"])) {
+	session_destroy();
+	echo '<script>alert("You have been Log out!");
+		 window.location = "index.php";</script>';
+		 exit;
+}
+
+if(array_key_exists('Join', $_POST)) {
+	$user_id = $_POST['user_id'];
+	$class_id = $_POST['class_id'];
+
+	$request = "INSERT INTO `classroom_user` (`classroom_id`, `user_id`) VALUES ('$class_id', '$user_id')";
+	mysqli_query($con, $request);
+	echo '<script>alert("Enrolled Complete!"); window.location = "index.php";</script>';
+	exit();
+}
+
+if(array_key_exists('Leave', $_POST)) {
+	$id = $_POST['class_user_id'];
+
+	$request = "DELETE FROM `classroom_user` WHERE id = $id";
+	mysqli_query($con, $request);
+	echo '<script>alert("Class Deleted!"); window.location = "index.php";</script>';
+	exit();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -41,6 +67,8 @@ session_start();
 			font-size: 13px;
 			font-weight: 700;
 			color: #fff;
+			margin-left: auto;
+			margin-top: 24px;
 		}
 
 		.grid-container {
@@ -204,6 +232,8 @@ session_start();
 			position: fixed;
 			transform: translate(-10000px, 0px);
 			top: 0;
+
+			overflow: auto;
 		}
 
 		.text-name {
@@ -246,6 +276,36 @@ session_start();
 			overflow: hidden;
 			white-space: nowrap;
 		}
+
+		.field-introduction, .field-code, .field-room {
+			color: #fff;
+		}
+
+		.btn-cancel {
+			padding: 4px;
+		}
+
+		.btn-edit-profile {
+			color: #fff;
+		}
+
+		.btn-logout {
+			width: 173px;
+			color: #fff;
+			margin: 8px auto;
+		}
+
+		.form-logout {
+			align-self: center;
+		}
+
+		.join-form {
+			align-self: end;
+		}
+
+		.form-leave {
+			align-self: end;
+		}
 	</style>
 
 </head>
@@ -259,24 +319,34 @@ session_start();
 			<div class="flex-grow-1 text-nav-bar">Classroom</div>
 		</div>
 		<div class="d-flex flex-column content">
+			<div class="d-flex flex-grow-1 justify-content-between justify-content-center align-items-center box-header-create">
+				<input type="submit" class="main-button btn-create-class" id="btn-create-class" value="Create class" />
+			</div>
+
 			<!-- Enrolled -->
+			<?php
+				$session_id = $_SESSION['id'] ?? 0;
+				$query = "SELECT * FROM classroom_user a LEFT JOIN classroom b ON a.classroom_id = b.id LEFT JOIN user c ON b.created_by = c.id WHERE a.user_id = $session_id";
+				$res = mysqli_query($con, $query);
+				if(mysqli_num_rows($res) > 0) {
+			?>
 			<div class="d-flex flex-grow-1 justify-content-between justify-content-center align-items-center box-header">
 				<div class="text text-enrolled">Enrolled</div>
-				<input type="submit" class="main-button btn-create-class" id="btn-create-class" value="Create class" />
 			</div>
 			<div class="grid-container">
 				<?php
-				$session_id = $_SESSION['id'] ?? 0;
-				$query = "SELECT * FROM classroom_user a LEFT JOIN classroom b ON a.classroom_id = b.id LEFT JOIN user c ON b.created_by = c.id WHERE a.user_id = 1";
-				$res = mysqli_query($con, $query);
 				if (!$res) {
 					printf("Error: %s\n", mysqli_error($con));
 					exit();
 				}
-				while ($row = mysqli_fetch_array($res)) { ?>
+				while ($row = mysqli_fetch_array($res)) {
+				?>
 					<div class="item_<?php echo $row['classroom_id']; ?>">
 						<div class="d-flex flex-column">
-							<input type="submit" class="main-button btn-class-div" value="Join" />
+							<form class="form-leave" method="post">
+								<input type="hidden" name="class_user_id" value="<?php echo $row[0];?>"/>
+								<input type="submit" class="main-button btn-class-div" name="Leave" value="Leave" />
+							</form>
 							<div class="d-flex">
 								<div class="img-profile">
 									<img class="profile image-fit-width" src="<?php echo $row['class_image'] ?? 'imgs/circle.png'; ?>" width="82" height="82" />
@@ -291,51 +361,96 @@ session_start();
 					</div>
 				<?php } ?>
 			</div>
+			<?php
+				}
+			?>
 
 			<!-- Classroom -->
+			<?php
+				$session_id = $_SESSION['id'] ?? 0;
+				$query = "SELECT * FROM classroom a LEFT JOIN user b ON a.created_by = b.id WHERE b.id = $session_id";
+				$res = mysqli_query($con, $query);
+				if(mysqli_num_rows($res) > 0) {
+			?>
 			<div class="d-flex flex-grow-1 box-header">
 				<div class="text text-my-classroom">My Classroom</div>
 			</div>
 			<div class="grid-container">
+				<?php
+				if (!$res) {
+					printf("Error: %s\n", mysqli_error($con));
+					exit();
+				}
+				while ($row = mysqli_fetch_array($res)) { ?>
 				<div class="item1">
 					<div class="d-flex flex-column">
-						<input type="submit" class="main-button btn-class-div" value="leave" />
 						<div class="d-flex">
 							<div class="img-profile">
 								<img class="profile image-fit-width" src="imgs/circle.png" width="82" height="82" />
 							</div>
 							<div class="d-flex flex-column  justify-content-center align-items-center subject-detail">
-								<div class="subject-code text-left">935 002</div>
-								<div class="subject-name text-left">Introduction to e-Bu...Introduction to e-Bu...Introduction to e-Bu...</div>
+								<div class="subject-code text-left"><?php echo $row['subject_number']; ?></div>
+								<div class="subject-name text-left"><?php echo $row['classname']; ?></div>
 							</div>
 						</div>
-						<div class="subject-author">Kanda Sorn-in</div>
+						<div class="subject-author"><?php echo $row['firstname'].' '.$row['lastname']; ?></div>
 					</div>
 				</div>
+				<?php
+					}
+				?>
 			</div>
+			<?php
+				}
+			?>
 
 
 			<!-- Classroom -->
+			<?php
+				$session_id = $_SESSION['id'] ?? 0;
+				$query = "SELECT * FROM classroom a LEFT JOIN user b ON a.created_by = b.id LEFT JOIN classroom_user c ON c.classroom_id = a.id";
+				$res = mysqli_query($con, $query);
+				if(mysqli_num_rows($res) > 0) {
+			?>
 			<div class="d-flex flex-grow-1 box-header">
 				<div class="text text-all-class">All class</div>
 			</div>
 			<div class="grid-container">
+				<?php
+				if (!$res) {
+					printf("Error: %s\n", mysqli_error($con));
+					exit();
+				}
+				while ($row = mysqli_fetch_array($res)) {
+				if($row['user_id'] != $session_id) {
+			?>
 				<div class="item1">
 					<div class="d-flex flex-column">
-						<input type="submit" class="main-button btn-class-div" id="btn-join" value="Join" />
+						<form method="post" class="join-form">
+							<input type="hidden" name="class_id" value="<?php echo $row[0]; ?>"/>
+							<input type="hidden" name="user_id" value="<?php echo $_SESSION['id']; ?>"/>
+							<input type="submit" class="main-button btn-class-div" id="btn-join" name="Join" value="Join" />
+						</form>
 						<div class="d-flex">
 							<div class="img-profile">
 								<img class="profile image-fit-width" src="imgs/circle.png" width="82" height="82" />
 							</div>
 							<div class="d-flex flex-column  justify-content-center align-items-center subject-detail">
-								<div class="subject-code text-left">935 002</div>
-								<div class="subject-name text-left">Introduction to e-Bu...Introduction to e-Bu...Introduction to e-Bu...</div>
+								<div class="subject-code text-left"><?php echo $row['subject_number']; ?></div>
+								<div class="subject-name text-left"><?php echo $row['classname']; ?></div>
 							</div>
 						</div>
-						<div class="subject-author">Kanda Sorn-in</div>
+						<div class="subject-author"><?php echo $row['firstname'].' '.$row['lastname']; ?></div>
 					</div>
 				</div>
+				<?php
+					}
+				}
+				?>
 			</div>
+			<?php
+				}
+			?>
 		</div>
 	</div>
 
@@ -361,13 +476,13 @@ session_start();
 				CREATE CLASS
 			</div>
 			<div class="mt-2"></div>
-			<div class="d-flex flex-column align-items-center">
-				<input class="input-field modal-field field-introduction" placeholder="Introduction to e-Business" />
-				<input class="input-field modal-field field-code" placeholder="095432" />
-				<input class="input-field modal-field field-room" placeholder="Room (not required)" />
+			<form class="d-flex flex-column align-items-center" action="./controller/create_classroom.php" method="post">
+				<input class="input-field modal-field field-introduction" name="introduction" placeholder="Introduction to e-Business" />
+				<input class="input-field modal-field field-code" name="code" placeholder="095432" />
+				<input class="input-field modal-field field-room" name="room" placeholder="Room (not required)" />
 				<input type="submit" class="main-button btn-create" value="create" />
-				<input type="submit" class="main-button-outline btn-cancel" id="btn-cancel" value="cancel" />
-			</div>
+				<div class="main-button-outline btn-cancel text-center" id="btn-cancel">cancel</div>
+			</form>
 		</div>
 	</div>
 
@@ -375,52 +490,79 @@ session_start();
 		<div id="hideSidebar" class="hide-sidebar align-self-end">
 			<img class="image-fit-width" src="imgs/align_left_free_icon_font.png" width="32" height="32" />
 		</div>
-		<div class="img-profile align-self-center">
+		<div class="d-flex flex-column img-profile align-self-center">
 			<img class="profile image-fit-width" src="imgs/circle.png" width="106" height="106" />
+			<button class="main-button btn-edit-profile text-center">edit photo</button>
 		</div>
 		<div class="text-name align-self-center">
-			chatchai prathammate
+			<?php echo $_SESSION['firstname'].' '. $_SESSION['lastname']; ?>
 		</div>
 		<div class="line mt-2"></div>
+		<?php
+			$session_id = $_SESSION['id'] ?? 0;
+			$query = "SELECT * FROM classroom a LEFT JOIN user b ON a.created_by = b.id WHERE b.id = $session_id";
+			$res = mysqli_query($con, $query);
+			if(mysqli_num_rows($res) > 0) {
+		?>
 		<div class="text-title">
 			My classroom
 		</div>
+		<?php
+			}
+
+			if (!$res) {
+				printf("Error: %s\n", mysqli_error($con));
+				exit();
+			}
+			while ($row = mysqli_fetch_array($res)) {
+		?>
 		<div class="d-flex card-items justify-content-between justify-content-center align-items-center">
 			<div class="img-profile">
 				<img class="profile image-fit-width" src="imgs/circle.png" width="42" height="42" />
 			</div>
 			<div class="subject-code-sidebar">
-				935 342
+				<?php echo $row['subject_number']; ?>
 			</div>
 			<div class="subject-name-sidebar">
-				my classroom 101my classroom 101my classroom 101my classroom 101my classroom 101
+				<?php echo $row['classname']; ?>
 			</div>
 		</div>
+		<?php } ?>
+
+		<?php
+				$session_id = $_SESSION['id'] ?? 0;
+				$query = "SELECT * FROM classroom_user a LEFT JOIN classroom b ON a.classroom_id = b.id LEFT JOIN user c ON b.created_by = c.id WHERE a.user_id = $session_id";
+				$res = mysqli_query($con, $query);
+				if(mysqli_num_rows($res) > 0) {
+		?>
 		<div class="text-title">
 			Enrolled
 		</div>
+		<?php
+			}
+
+			if (!$res) {
+				printf("Error: %s\n", mysqli_error($con));
+				exit();
+			}
+			while ($row = mysqli_fetch_array($res)) {
+		?>
 		<div class="d-flex card-items justify-content-between justify-content-center align-items-center">
 			<div class="img-profile">
 				<img class="profile image-fit-width" src="imgs/circle.png" width="42" height="42" />
 			</div>
 			<div class="subject-code-sidebar">
-				935 342
+				<?php echo $row['subject_number'];?>
 			</div>
 			<div class="subject-name-sidebar">
-				my classroom 101my classroom 101my classroom 101my classroom 101my classroom 101
+				<?php echo $row['classname'];?>
 			</div>
 		</div>
-		<div class="d-flex card-items justify-content-between justify-content-center align-items-center">
-			<div class="img-profile">
-				<img class="profile image-fit-width" src="imgs/circle.png" width="42" height="42" />
-			</div>
-			<div class="subject-code-sidebar">
-				935 342
-			</div>
-			<div class="subject-name-sidebar">
-				my classroom 101my classroom 101my classroom 101my classroom 101my classroom 101
-			</div>
-		</div>
+		<?php } ?>
+		<div class="line mt-2"></div>
+		<form method="get" class="form-logout" action="./controller/get-logout.php">
+			<button class="main-button btn-logout text-center" value="logout">Logout</button>
+		</form>
 	</div>
 
 	<script>

@@ -1,3 +1,14 @@
+<?php
+include("./controller/db-connect.php");
+session_start();
+
+if(!isset($_SESSION["id"])) {
+	session_destroy();
+	echo '<script>alert("You have been Log out!");
+		 window.location = "index.php";</script>';
+		 exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -472,6 +483,20 @@
 			overflow: hidden;
 			white-space: nowrap;
 		}
+
+		.btn-edit-profile {
+			color: #fff;
+		}
+
+		.btn-logout {
+			width: 173px;
+			color: #fff;
+			margin: 8px auto;
+		}
+
+		.form-logout {
+			align-self: center;
+		}
 	</style>
 
 </head>
@@ -649,54 +674,81 @@
 
 	<div class="d-flex flex-column menubar">
 		<div id="hideSidebar" class="hide-sidebar align-self-end">
-			<img class="image-fit-width" src="imgs/align_left_free_icon_font.png" width="32" height="32"/>
+			<img class="image-fit-width" src="imgs/align_left_free_icon_font.png" width="32" height="32" />
 		</div>
-		<div class="img-profile align-self-center">
-			<img class="profile image-fit-width" src="imgs/circle.png" width="106" height="106"/>
+		<div class="d-flex flex-column img-profile align-self-center">
+			<img class="profile image-fit-width" src="imgs/circle.png" width="106" height="106" />
+			<button class="main-button btn-edit-profile text-center">edit photo</button>
 		</div>
 		<div class="text-name align-self-center">
-			chatchai prathammate
+			<?php echo $_SESSION['firstname'].' '. $_SESSION['lastname']; ?>
 		</div>
 		<div class="line mt-2"></div>
+		<?php
+			$session_id = $_SESSION['id'] ?? 0;
+			$query = "SELECT * FROM classroom a LEFT JOIN user b ON a.created_by = b.id WHERE b.id = $session_id";
+			$res = mysqli_query($con, $query);
+			if(mysqli_num_rows($res) > 0) {
+		?>
 		<div class="text-title">
 			My classroom
 		</div>
+		<?php
+			}
+
+			if (!$res) {
+				printf("Error: %s\n", mysqli_error($con));
+				exit();
+			}
+			while ($row = mysqli_fetch_array($res)) {
+		?>
 		<div class="d-flex card-items justify-content-between justify-content-center align-items-center">
 			<div class="img-profile">
-				<img class="profile image-fit-width" src="imgs/circle.png" width="42" height="42"/>
+				<img class="profile image-fit-width" src="imgs/circle.png" width="42" height="42" />
 			</div>
 			<div class="subject-code-sidebar">
-				935 342
+				<?php echo $row['subject_number']; ?>
 			</div>
 			<div class="subject-name-sidebar">
-				my classroom 101my classroom 101my classroom 101my classroom 101my classroom 101
+				<?php echo $row['classname']; ?>
 			</div>
 		</div>
+		<?php } ?>
+
+		<?php
+				$session_id = $_SESSION['id'] ?? 0;
+				$query = "SELECT * FROM classroom_user a LEFT JOIN classroom b ON a.classroom_id = b.id LEFT JOIN user c ON b.created_by = c.id WHERE a.user_id = $session_id";
+				$res = mysqli_query($con, $query);
+				if(mysqli_num_rows($res) > 0) {
+		?>
 		<div class="text-title">
 			Enrolled
 		</div>
+		<?php
+			}
+
+			if (!$res) {
+				printf("Error: %s\n", mysqli_error($con));
+				exit();
+			}
+			while ($row = mysqli_fetch_array($res)) {
+		?>
 		<div class="d-flex card-items justify-content-between justify-content-center align-items-center">
 			<div class="img-profile">
-				<img class="profile image-fit-width" src="imgs/circle.png" width="42" height="42"/>
+				<img class="profile image-fit-width" src="imgs/circle.png" width="42" height="42" />
 			</div>
 			<div class="subject-code-sidebar">
-				935 342
+				<?php echo $row['subject_number'];?>
 			</div>
 			<div class="subject-name-sidebar">
-				my classroom 101my classroom 101my classroom 101my classroom 101my classroom 101
+				<?php echo $row['classname'];?>
 			</div>
 		</div>
-		<div class="d-flex card-items justify-content-between justify-content-center align-items-center">
-			<div class="img-profile">
-				<img class="profile image-fit-width" src="imgs/circle.png" width="42" height="42"/>
-			</div>
-			<div class="subject-code-sidebar">
-				935 342
-			</div>
-			<div class="subject-name-sidebar">
-				my classroom 101my classroom 101my classroom 101my classroom 101my classroom 101
-			</div>
-		</div>
+		<?php } ?>
+		<div class="line mt-2"></div>
+		<form method="get" class="form-logout" action="./controller/get-logout.php">
+			<button class="main-button btn-logout text-center" value="logout">Logout</button>
+		</form>
 	</div>
 	<script>
 		var isShow = false;

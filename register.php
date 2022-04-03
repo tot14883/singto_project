@@ -1,3 +1,12 @@
+<?php
+    include("./db-connect.php");
+    session_start();
+		if(isset($_SESSION['id'])) {
+			echo '<script>window.location = "home.php";</script>';
+			exit;
+		}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -110,7 +119,7 @@
 		</div>
 		<div class="d-flex flex-column justify-content-center login-box box-primary">
 			<div class="text-header">Register</div>
-			<form class="d-flex flex-column align-items-center" action = "./get-register.php" method="post">
+			<form class="d-flex flex-column align-items-center" action = "./controller/get-register.php" method="post">
 				<input type="email" name="email" class="input-field field-email" placeholder="Email"/>
 				<input type="password" name="password" class="input-field field-password" placeholder="Password"/>
 				<input type="password" name="confirmpassword" class="input-field field-password" placeholder="Confirm Password"/>

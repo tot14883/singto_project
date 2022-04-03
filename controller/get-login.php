@@ -1,4 +1,4 @@
-<?php 
+<?php
     include("./db-connect.php");
     session_start();
 
@@ -10,6 +10,7 @@
     $objQuery = mysqli_query($con, $strSQL);
     $objResult = mysqli_fetch_array($objQuery, MYSQLI_ASSOC);
     echo json_encode($objResult);
+
     if (!$objQuery) {
         printf("Error: %s\n", mysqli_error($con));
         exit();
@@ -24,20 +25,20 @@
                 $_SESSION["email"] = $objResult["email"];
                 $_SESSION["password"] = $objResult["password"];
                 session_write_close();
-				header("location:home.php");
+				header("location:../home.php");
 			}
         }
         else {
             echo '<script>alert("Email or Password Incorrect!");
-                window.location = "index.php";</script>';
+                window.location = "../index.php";</script>';
                 exit;
         }
     }
     else {
         echo '<script>alert("Email or Password Incorrect!");
-                window.location = "index.php";</script>';
+                window.location = "../index.php";</script>';
                 exit;
     }
-        
+
     mysqli_close($con);
 ?>
