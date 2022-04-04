@@ -1,12 +1,13 @@
 <?php
-include("./controller/db-connect.php");
-session_start();
-
-if(!isset($_SESSION["id"])) {
-	session_destroy();
-	echo '<script>alert("You have been Log out!");
-		 window.location = "index.php";</script>';
-		 exit;
+	include("./controller/db-connect.php");
+	session_start();
+	$fullname = $_SESSION["firstname"].' '.$_SESSION["lastname"];
+	
+	if(!isset($_SESSION["id"])) {
+		session_destroy();
+		echo '<script>alert("You have been Log out!");
+			window.location = "index.php";</script>';
+			exit;
 }
 ?>
 <!DOCTYPE html>
@@ -508,40 +509,51 @@ if(!isset($_SESSION["id"])) {
 			</div>
 			<div class="flex-grow-1 text-nav-bar">Classroom</div>
 		</div>
+		<?php
+		$class_id = $_GET["id"];
+		$query = "SELECT * FROM classroom a LEFT JOIN user b ON a.created_by = b.id WHERE a.id = $class_id AND deleted_at IS NULL";
+		$res = mysqli_query($con, $query);
+		while ($row = mysqli_fetch_array($res)) { ?>
 		<div class="d-flex flex-column box-profile">
 			<div class="d-flex flex-grow-1 group-edit">
-				<button class="main-button edit-button text-center">edit</button>
+				<?php if($_SESSION['id'] == $row['created_by']) { ?>
 				<div class="drop-down-edit" id="show-drop-down">
 					<img src="imgs/menu_dots_vertical_free_icon_font.png" width="19" height="19"/>
 					<div class="d-flex flex-column group-drop-down-edit">
-						<div class="drop-down-text" id="dd-edit">edit class</div>
-						<div class="drop-down-text" id="dd-delete">delete class</div>
+						<div class="drop-down-text" id="dd-edit">
+							<a href="./edit.php?id=<?php echo $class_id ?>"></a>
+						</div>
+						<div class="drop-down-text" id="dd-delete">
+							<a href="./get-delete.php?type=classroom?id=<?php echo $class_id ?>"></a>
+						</div>
 					</div>
 				</div>
+				<?php } ?>
 			</div>
 			<div class="d-flex box-infomation-author">
 				<div class="d-flex flex-column align-items-center box-img-profile">
 					<div class="img-profile">
 						<img class="profile image-fit-width" src="imgs/circle.png" width="131" height="131"/>
 					</div>
-					<button class="main-button btn-edit-photo text-center">edit photo</button>
+					<button class="main-button btn-edit-photo text-center">upload photo</button>
 				</div>
 				<div class="d-flex flex-column box-subject">
 					<div class="text-title-code-subject text-header">
-						935432
+						<?php echo $row['subject_number']; ?>
 					</div>
 					<div class="text-desc-code-subject text-header">
-						Introduction to e-Business
+					<?php echo $row['classname']; ?>
 					</div>
 				</div>
 			</div>
 			<div class="d-flex flex-grow-1 box-author">
-					<div class="author">author</div>
-				</div>
+				<div class="author"><?php echo $row['firstname'].' '.$row['lastname']; ?></div>
+			</div>
 		</div>
+		<?php } ?>
 		<div class="d-flex flex-grow-1 justify-content-center align-items-start box-content">
 			<div class="d-flex flex-column box-timeline">
-					 <!-- Create post -->
+					<!-- Create post -->
 					<div class="d-flex flex-column box-create-post">
 						<div class="d-flex box-create-post-header">
 							<div class="img-profile">
@@ -549,15 +561,12 @@ if(!isset($_SESSION["id"])) {
 							</div>
 							<div class="d-flex flex-column box-author-post">
 								<div class="create-post-author">
-									Kanda Sorn-in
-								</div>
-								<div class="create-post-datetime">
-									Aug 5, 2020
+									<?php echo $fullname; ?>
 								</div>
 							</div>
 						</div>
 						<div class="d-flex box-create-post-body">
-						<textarea rows="4">what’s happen?</textarea>
+						<textarea rows="4" placeholder="what’s happen?"></textarea>
 						</div>
 						<div class="d-flex justify-content-between box-create-post-footer">
 								<div class="file-name">
@@ -571,6 +580,11 @@ if(!isset($_SESSION["id"])) {
 					</div>
 
 					<!-- Display post -->
+					<?php
+						$class_id = $_GET["id"];
+						$query = "SELECT * FROM post a LEFT JOIN user b ON a.created_by = b.id WHERE a.id = $class_id";
+						$res = mysqli_query($con, $query);
+						while ($row = mysqli_fetch_array($res)) { ?>
 					<div class="d-flex flex-column box-display-post">
 						<div class="d-flex box-display-post-header">
 							<div class="img-profile">
@@ -578,21 +592,20 @@ if(!isset($_SESSION["id"])) {
 							</div>
 							<div class="d-flex flex-column box-author-post">
 								<div class="display-post-author">
-									Kanda Sorn-in
+									<?php echo $row['firstname'].' '.$row['lastname']; ?>
 								</div>
 								<div class="display-post-datetime">
-									Aug 5, 2020
+									<?php echo $row['created_at']; ?>
 								</div>
 							</div>
 						</div>
 						<div class="d-flex flex-column box-display-post-body">
 							<div class="post-detail">
-								แบบประมวลรายวิชา(Course Syllabus)
-								รหัสวิชา 935432 ธุรกิจอิเล็กทรอนิกส์ขั้นแนะนำ (INTRODUCTION TO E-BUSINEES)
+								<?php echo $row['description'] ?>
 							</div>
 							<div class="d-flex flex-column file-detail">
-								<div class="file-detail-name">แผนการสอน-แบบประมวลราย...</div>
-								<div class="file-detail-extension">PDF</div>
+								<div class="file-detail-name"><a href="./upload/files/<?php echo $row['file_path'] ?>"><?php echo $row['file_name'] ?></a></div>
+								<div class="file-detail-extension"><a href="./upload/files/<?php echo $row['file_extension'] ?>"></a></div>
 							</div>
 						</div>
 						<div class="line"></div>
@@ -606,6 +619,11 @@ if(!isset($_SESSION["id"])) {
 							<div class="total-comments">
 									6 comments
 							</div>
+							<?php
+								$class_id = $_GET["id"];
+								$query = "SELECT * FROM comment a LEFT JOIN user b ON a.created_by = b.id WHERE a.id = $class_id ORDER BY comment.created_at";
+								$res = mysqli_query($con, $query);
+								while ($row = mysqli_fetch_array($res)) { ?>
 							<div class="d-flex">
 								<div class="d-flex box-display-comments">
 									<div class="img-profile">
@@ -614,43 +632,62 @@ if(!isset($_SESSION["id"])) {
 									<div class="d-flex flex-column box-author-comment">
 										<div class="d-flex">
 											<div class="align-self-center display-comment-author">
-												Kanda Sorn-in
+												<?php echo $row['firstname'].' '.$row['lastname']; ?>
 											</div>
 											<div class="align-self-center display-comment-datetime">
-												Aug 5, 2020
+												<?php echo $row['created_at']; ?>
 											</div>
 										</div>
 										<div class="comment-message">
-											hello my name is cahtchai prathammate project class room i’m live in udon
+											<?php echo $row['description']; ?>
 										</div>
 									</div>
 								</div>
 							</div>
+							<?php } ?>
 						</div>
 					</div>
+					<?php } ?>
 			</div>
 			<div class="d-flex flex-column box-menu-bar">
 				<div class="text-center box-classwork-work">
 					<div class="title-classwork-work">Classwork</div>
-					<div class="d-flex justify-content-between align-items-center classwork-item">
-						<div class="classwork-desc">(งานกลุ่ม 3 คน) project 25 คะแน...</div>
-						<div class="classwork-datetime">Aug 5, 2020</div>
-					</div>
+					<?php
+						$class_id = $_GET["id"];
+						$query = "SELECT * FROM assignment a LEFT JOIN user b ON a.created_by = b.id WHERE a.id = $class_id ORDER BY a.created_at LIMIT 3";
+						$res = mysqli_query($con, $query);
+						while ($row = mysqli_fetch_array($res)) { ?>
+						<div class="d-flex justify-content-between align-items-center classwork-item">
+							<div class="classwork-desc"><?php echo $row['description'] ?></div>
+							<div class="classwork-datetime"><?php echo $row['created_at'] ?></div>
+						</div>
+					<?php } ?>
 					<div class="d-flex justify-content-between btn-group-classwork-work">
-							<div class="btn-all-class-work main-button-outline text-center">All class work</div>
-							<div class="btn-create-work main-button text-center">Create work</div>
+							<div class="btn-all-class-work main-button-outline text-center">
+								<a href="./assignment.php" class="text-decoration-none text-light">All class work</a>
+							</div>
+							<div class="btn-create-work main-button text-center">
+								<a href="./add_classwork.php" class="text-decoration-none text-light">Create work</a>
+							</div>
 						</div>
 				</div>
 				<div class="text-center box-classwork-member">
-					<div class="title-classwork-member">Classwork</div>
+					<div class="title-classwork-member">Class Member</div>
+					<?php
+						$class_id = $_GET["id"];
+						$query = "SELECT * FROM classroom_user a LEFT JOIN user b ON a.user_id = b.id LEFT JOIN classroom c ON a.classroom_id = c.id WHERE a.id = $class_id";
+						$res = mysqli_query($con, $query);
+						while ($row = mysqli_fetch_array($res)) { ?>
 					<div class="d-flex align-items-center classwork-member-item">
 						<div class="img-profile">
-							<img class="profile image-fit-width" src="imgs/circle.png" width="37" height="37"/>
+							<img class="profile image-fit-width" src="<?php echo $row['file_path'] ?? 'imgs/circle.png'; ?>" width="37" height="37"/>
 						</div>
 						<div class="member-name">
-							chatchai prathammate1
+						<?php echo $row['firstname'].' '.$row['lastname']; ?>
 						</div>
 					</div>
+					<?php } ?>
+					
 				</div>
 			</div>
 		</div>

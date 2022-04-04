@@ -78,7 +78,6 @@ if(!isset($_SESSION["id"])) {
 			width: 943px;
 
 			margin-top: 8px;
-			margin-bottom: 8px;
 			margin-left: auto;
 			margin-right: auto;
 			background-color: var(--primary);
@@ -106,93 +105,49 @@ if(!isset($_SESSION["id"])) {
 			border: 1px solid var(--blue-ocean);
 		}
 
-		.create-title {
-			font-size: 16px;
-			font-weight: 700;
-			color: #fff;
-		}
-
-		.create-detail {
-			font-size: 16px;
-			font-weight: 700;
-			color: #fff;
-		}
-
-		.field-title,
-		.field-title::-webkit-input-placeholder {
-			width: 557px;
-			font-size: 16px;
-			padding: 4px;
-			background-color: var(--gray-cement);
-			border-radius: 0px;
-			margin-left: 30px;
-		}
-
-		textarea {
-			border:1px solid #999999;
-			width:557px;
-			margin-top:5px;
-			margin-left: 19px;
-			padding:3px;
-			align-content: left;
-			background-color: var(--gray-cement);
-		}
-
-		.box-footer {
-			margin-top: 8px;
-		}
-
-		.group-file {
-			margin-left: 63px;
-		}
-
-		.btn-add-file {
-			width:120px;
-			background-color: var(--gray-cement);
-			font-size: 15px;
-			font-weight: 300;
-			color: #5876FF;
-		}
-
-		.file-detail {
-			margin-top: 8px;
-			margin-left: 8px;
-			width: 262px;
-			padding: 8px;
-			background-color: var(--primary);
-			border: 1px solid var(--blue-ocean);
-		}
-
-		.file-detail-name {
-			width: 262px;
+		.subject-title {
+			width: 379px;
 			text-overflow: ellipsis;
 			white-space: nowrap;
-			font-size: 16px;
+			font-size: 15px;
 			font-weight: 300;
 			color: #fff;
 		}
 
-		.file-detail-extension {
+		.subject-datetime {
 			font-size: 10px;
 			font-weight: 300;
-			color: var(--gray-cement);
+			color: #B5C4D3;
 		}
 
-		.btn-create {
-			width: 90px;
-			color: #fff;
+		.subject-status {
 			font-size: 13px;
-			margin-right: 30px;
+			font-weight: 300;
+			color: #FF7070;
 		}
 
-		/** Menu bar */
-		.line {
-			width: 100%;
-			height: 1px;
-			background-color: var(--blue-ocean);
+		.text-comments {
+			font-size: 8px;
+			font-weight: 300;
+			color: #B5C4D3;
 		}
 
-		.menubar {
+		.btn-create-work {
+			width: 85px;
+			font-size: 10px;
+			font-weight: 700;
+			color: #fff;
+		}
+
+		.btn-delete-work {
+			width: 77px;
+			font-size: 13px;
+			font-weight: 700;
+			color: #fff;
+		}
+
+				/** Menu bar */
+				.menubar {
 			width: 379px;
 			height: 100%;
 			padding: 16px;
@@ -293,39 +248,43 @@ if(!isset($_SESSION["id"])) {
 					<div class="author">author</div>
 				</div>
 		</div>
-		<form action="./controller/create_assignment.php" method="post">
 		<div class="box-content">
 			<div class="d-flex flex-column box-content-detail">
-				<div class="title">
-					Create classwork
+				<div class="d-flex justify-content-between justify-content-center align-items-center" >
+					<div class="title">
+						Classwork
+					</div>
+					<button class="main-button btn-create-work text-center">Create work</button>
 				</div>
 				<div class="d-flex flex-column card-item">
-					<div class="d-flex">
-						<div class="create-title">
-							Title
+					<div class="d-flex justify-content-between justify-content-center align-items-center">
+						<div class="subject-title">
+							(งานกลุ่ม 3 คน) project 25 คะแนน
 						</div>
-						<input type="text" name="title" class="input-field field-title"/>
+						<div class="subject-datetime">
+							Aug 5, 2020
+						</div>
+						<div class="subject-status">
+							Missing
+						</div>
 					</div>
-					<div class="d-flex">
-						<div class="create-detail">
-							Detail
-						</div>
-						<textarea name="description" rows="4"></textarea>
+					<div class="text-comments">
+						comments
 					</div>
-					<div class="d-flex justify-content-between justify-content-center align-items-center box-footer">
-						<div class="d-flex group-file">
-							<div class="btn-add-file align-self-center">+ add file</div>
-							<div class="d-flex flex-column file-detail">
-								<div class="file-detail-name">แผนการสอน-แบบประมวลราย...</div>
-								<div class="file-detail-extension">PDF</div>
-							</div>
+				</div>
+				<div class="d-flex flex-column card-item">
+					<div class="d-flex justify-content-between justify-content-center align-items-center">
+						<div class="subject-title">
+							(งานกลุ่ม 3 คน) project 25 คะแนน
 						</div>
-						<button type="submit" class="main-button btn-create text-center align-self-center">Create</button>
+						<div class="subject-datetime">
+							Aug 5, 2020
+						</div>
+						<button class="main-button-outline btn-delete-work text-center">Delete</button>
 					</div>
 				</div>
 			</div>
 		</div>
-	</form>
 	</div>
 
 	<div class="d-flex flex-column menubar">

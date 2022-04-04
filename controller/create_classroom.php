@@ -21,8 +21,8 @@
 				$query = "INSERT INTO `classroom`(`classname`, `subject_number`, `room`, `created_by`, `updated_by`) VALUES ('$introduction', '$code', '$room', '$userId', '$userId')";
                 mysqli_query($con, $query);
 				echo '<script>alert("Create Class Complete!");
-				        window.location = "../home.php";</script>';
-				        exit;
+                    window.location = "../home.php";</script>';
+                    exit;
     }
     else if ($rowcheck['subject_number'] == $code){
         echo '<script>alert("This code already exist!");
