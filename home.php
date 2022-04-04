@@ -347,6 +347,7 @@ if(array_key_exists('Leave', $_POST)) {
 								<input type="hidden" name="class_user_id" value="<?php echo $row[0];?>"/>
 								<input type="submit" class="main-button btn-class-div" name="Leave" value="Leave" />
 							</form>
+							<a href="manage_class.php?id=<?php echo $row['classroom_id']; ?>" class="text-decoration-none">
 							<div class="d-flex">
 								<div class="img-profile">
 									<img class="profile image-fit-width" src="<?php echo $row['class_image'] ?? 'imgs/circle.png'; ?>" width="82" height="82" />
@@ -356,6 +357,7 @@ if(array_key_exists('Leave', $_POST)) {
 									<div class="subject-name text-left"><?php echo $row['classname'] ?? '-'; ?></div>
 								</div>
 							</div>
+							</a>
 							<div class="subject-author"><?php echo $row['firstname'].' '.$row['firstname']?? '-'; ?></div>
 						</div>
 					</div>

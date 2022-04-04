@@ -554,6 +554,7 @@
 		<div class="d-flex flex-grow-1 justify-content-center align-items-start box-content">
 			<div class="d-flex flex-column box-timeline">
 					<!-- Create post -->
+					<form method="post" action="./create_post.php">
 					<div class="d-flex flex-column box-create-post">
 						<div class="d-flex box-create-post-header">
 							<div class="img-profile">
@@ -566,7 +567,7 @@
 							</div>
 						</div>
 						<div class="d-flex box-create-post-body">
-						<textarea rows="4" placeholder="what’s happen?"></textarea>
+						<textarea name="description" rows="4" placeholder="what’s happen?"></textarea>
 						</div>
 						<div class="d-flex justify-content-between box-create-post-footer">
 								<div class="file-name">
@@ -574,11 +575,11 @@
 								</div>
 								<div class="d-flex">
 									<div class="btn-add-file main-button-outline text-center">+add file</div>
-									<div class="btn-send main-button text-center">Send</div>
+									<button type="submit" class="btn-send main-button text-center">Send</button>
 								</div>
 						</div>
 					</div>
-
+					</form>
 					<!-- Display post -->
 					<?php
 						$class_id = $_GET["id"];
