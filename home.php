@@ -306,6 +306,15 @@ if(array_key_exists('Leave', $_POST)) {
 		.form-leave {
 			align-self: end;
 		}
+
+		.profile-image {
+			border-radius: 50%;
+		}
+
+		.fileToUploadPhoto {
+			display: none;
+		}
+
 	</style>
 
 </head>
@@ -316,7 +325,11 @@ if(array_key_exists('Leave', $_POST)) {
 			<div id="showSidebar" class="show-sidebar justify-content-center align-items-center align-self-center ml-2">
 				<img class="image-fit-width" src="imgs/align_left_free_icon_font.png" width="32" height="32" />
 			</div>
-			<div class="flex-grow-1 text-nav-bar">Classroom</div>
+			<div class="flex-grow-1 text-nav-bar">
+				<a href="home.php" class="text-decoration-none text-light">
+					Classroom
+				</a>
+			</div>
 		</div>
 		<div class="d-flex flex-column content">
 			<div class="d-flex flex-grow-1 justify-content-between justify-content-center align-items-center box-header-create">
@@ -347,10 +360,10 @@ if(array_key_exists('Leave', $_POST)) {
 								<input type="hidden" name="class_user_id" value="<?php echo $row[0];?>"/>
 								<input type="submit" class="main-button btn-class-div" name="Leave" value="Leave" />
 							</form>
-							<a href="manage_class.php?id=<?php echo $row['classroom_id']; ?>" class="text-decoration-none">
+							<a href="member_class.php?id=<?php echo $row['classroom_id']; ?>" class="text-decoration-none">
 							<div class="d-flex">
 								<div class="img-profile">
-									<img class="profile image-fit-width" src="<?php echo $row['class_image'] ?? 'imgs/circle.png'; ?>" width="82" height="82" />
+									<img class="profile-image image-fit-width" src="<?php echo $row['photo'] ?? 'imgs/circle.png' ?>" width="82" height="82" />
 								</div>
 								<div class="d-flex flex-column  justify-content-center align-items-center subject-detail">
 									<div class="subject-code text-left"><?php echo $row['subject_number'] ?? '-'; ?></div>
@@ -383,20 +396,23 @@ if(array_key_exists('Leave', $_POST)) {
 					printf("Error: %s\n", mysqli_error($con));
 					exit();
 				}
-				while ($row = mysqli_fetch_array($res)) { ?>
+				while ($row = mysqli_fetch_array($res)) {
+					?>
 				<div class="item1">
-					<div class="d-flex flex-column">
-						<div class="d-flex">
-							<div class="img-profile">
-								<img class="profile image-fit-width" src="imgs/circle.png" width="82" height="82" />
+					<a href="member_class.php?id=<?php echo $row[0]; ?>" class="text-decoration-none">
+						<div class="d-flex flex-column">
+							<div class="d-flex">
+								<div class="img-profile">
+									<img class="profile-image image-fit-width" src="<?php echo $row['photo'] ?? 'imgs/circle.png' ?>" width="82" height="82" />
+								</div>
+								<div class="d-flex flex-column  justify-content-center align-items-center subject-detail">
+									<div class="subject-code text-left"><?php echo $row['subject_number']; ?></div>
+									<div class="subject-name text-left"><?php echo $row['classname']; ?></div>
+								</div>
 							</div>
-							<div class="d-flex flex-column  justify-content-center align-items-center subject-detail">
-								<div class="subject-code text-left"><?php echo $row['subject_number']; ?></div>
-								<div class="subject-name text-left"><?php echo $row['classname']; ?></div>
-							</div>
+							<div class="subject-author"><?php echo $row['firstname'].' '.$row['lastname']; ?></div>
 						</div>
-						<div class="subject-author"><?php echo $row['firstname'].' '.$row['lastname']; ?></div>
-					</div>
+					</a>
 				</div>
 				<?php
 					}
@@ -424,7 +440,7 @@ if(array_key_exists('Leave', $_POST)) {
 					exit();
 				}
 				while ($row = mysqli_fetch_array($res)) {
-				if($row['user_id'] != $session_id) {
+				if($row['created_by'] != $session_id) {
 			?>
 				<div class="item1">
 					<div class="d-flex flex-column">
@@ -435,7 +451,7 @@ if(array_key_exists('Leave', $_POST)) {
 						</form>
 						<div class="d-flex">
 							<div class="img-profile">
-								<img class="profile image-fit-width" src="imgs/circle.png" width="82" height="82" />
+								<img class="profile-image image-fit-width" src="<?php echo $row['photo'] ?? 'imgs/circle.png' ?>" width="82" height="82" />
 							</div>
 							<div class="d-flex flex-column  justify-content-center align-items-center subject-detail">
 								<div class="subject-code text-left"><?php echo $row['subject_number']; ?></div>
@@ -493,8 +509,11 @@ if(array_key_exists('Leave', $_POST)) {
 			<img class="image-fit-width" src="imgs/align_left_free_icon_font.png" width="32" height="32" />
 		</div>
 		<div class="d-flex flex-column img-profile align-self-center">
-			<img class="profile image-fit-width" src="imgs/circle.png" width="106" height="106" />
-			<button class="main-button btn-edit-profile text-center">edit photo</button>
+			<img class="profile-image image-fit-width" src="<?php echo  $_SESSION['photo'] ?? 'imgs/circle.png' ?>" width="106" height="106"/>
+			<form action="./controller/upload_image.php" method="post" enctype="multipart/form-data" class="d-flex justify-content-between" id="formUploadImageSidebar">
+						<input type="file" name="fileToUploadPhoto" id="fileToUploadPhotoSidebar" class="fileToUploadPhoto"/>
+						<button type="button"  class="main-button btn-edit-profile text-center" id="upload_image_sidebar">edit photo</button>
+			</form>
 		</div>
 		<div class="text-name align-self-center">
 			<?php echo $_SESSION['firstname'].' '. $_SESSION['lastname']; ?>
@@ -518,17 +537,19 @@ if(array_key_exists('Leave', $_POST)) {
 			}
 			while ($row = mysqli_fetch_array($res)) {
 		?>
-		<div class="d-flex card-items justify-content-between justify-content-center align-items-center">
-			<div class="img-profile">
-				<img class="profile image-fit-width" src="imgs/circle.png" width="42" height="42" />
+		<a href="member_class.php?id=<?php echo $row[0]; ?>" class="text-decoration-none">
+			<div class="d-flex card-items justify-content-between justify-content-center align-items-center">
+				<div class="img-profile">
+					<img class="profile-image image-fit-width" src="<?php echo $row['photo'] ?? 'imgs/circle.png' ?>" width="42" height="42" />
+				</div>
+				<div class="subject-code-sidebar">
+					<?php echo $row['subject_number']; ?>
+				</div>
+				<div class="subject-name-sidebar">
+					<?php echo $row['classname']; ?>
+				</div>
 			</div>
-			<div class="subject-code-sidebar">
-				<?php echo $row['subject_number']; ?>
-			</div>
-			<div class="subject-name-sidebar">
-				<?php echo $row['classname']; ?>
-			</div>
-		</div>
+		</a>
 		<?php } ?>
 
 		<?php
@@ -549,17 +570,19 @@ if(array_key_exists('Leave', $_POST)) {
 			}
 			while ($row = mysqli_fetch_array($res)) {
 		?>
-		<div class="d-flex card-items justify-content-between justify-content-center align-items-center">
-			<div class="img-profile">
-				<img class="profile image-fit-width" src="imgs/circle.png" width="42" height="42" />
+		<a href="member_class.php?id=<?php echo $row['classroom_id']; ?>" class="text-decoration-none">
+			<div class="d-flex card-items justify-content-between justify-content-center align-items-center">
+				<div class="img-profile">
+					<img class="profile-image image-fit-width" src="<?php echo $row['photo'] ?? 'imgs/circle.png' ?>" width="42" height="42" />
+				</div>
+				<div class="subject-code-sidebar">
+					<?php echo $row['subject_number'];?>
+				</div>
+				<div class="subject-name-sidebar">
+					<?php echo $row['classname'];?>
+				</div>
 			</div>
-			<div class="subject-code-sidebar">
-				<?php echo $row['subject_number'];?>
-			</div>
-			<div class="subject-name-sidebar">
-				<?php echo $row['classname'];?>
-			</div>
-		</div>
+		</a>
 		<?php } ?>
 		<div class="line mt-2"></div>
 		<form method="get" class="form-logout" action="./controller/get-logout.php">
@@ -590,6 +613,13 @@ if(array_key_exists('Leave', $_POST)) {
 
 		$("#hideSidebar").click(function() {
 			$('.menubar').css('transform', 'translate(-10000px, 0px)');
+		});
+
+		$("#upload_image_sidebar").click(function() {
+			$("#fileToUploadPhotoSidebar").click();
+			$("#fileToUploadPhotoSidebar").on("change", function(){
+				$("#formUploadImageSidebar").submit();
+			});
 		});
 	</script>
 </body>

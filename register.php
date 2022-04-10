@@ -1,5 +1,5 @@
 <?php
-    include("./db-connect.php");
+    include("./controller/db-connect.php");
     session_start();
 		if(isset($_SESSION['id'])) {
 			echo '<script>window.location = "home.php";</script>';

@@ -78,6 +78,7 @@ if(!isset($_SESSION["id"])) {
 			width: 943px;
 
 			margin-top: 8px;
+			margin-bottom: 8px;
 			margin-left: auto;
 			margin-right: auto;
 			background-color: var(--primary);
@@ -105,49 +106,94 @@ if(!isset($_SESSION["id"])) {
 			border: 1px solid var(--blue-ocean);
 		}
 
-		.subject-title {
-			width: 379px;
-			text-overflow: ellipsis;
-			white-space: nowrap;
+		.create-title {
+			font-size: 16px;
+			font-weight: 700;
+			color: #fff;
+		}
+
+		.create-detail {
+			font-size: 16px;
+			font-weight: 700;
+			color: #fff;
+		}
+
+		.field-title,
+		.field-title::-webkit-input-placeholder {
+			width: 557px;
+			font-size: 16px;
+			padding: 4px;
+			background-color: var(--gray-cement);
+			border-radius: 0px;
+			margin-left: 30px;
+		}
+
+		textarea {
+			border:1px solid #999999;
+			width:557px;
+			margin-top:5px;
+			margin-left: 19px;
+			padding:3px;
+			align-content: left;
+			background-color: var(--gray-cement);
+		}
+
+		.box-footer {
+			margin-top: 8px;
+		}
+
+		.group-file {
+			margin-left: 63px;
+		}
+
+		.btn-add-file {
+			width:120px;
+			background-color: var(--gray-cement);
 			font-size: 15px;
 			font-weight: 300;
+			color: #5876FF;
+		}
+
+		.file-detail {
+			display: none;
+			margin-top: 8px;
+			margin-left: 8px;
+			width: 262px;
+			padding: 8px;
+			background-color: var(--primary);
+			border: 1px solid var(--blue-ocean);
+		}
+
+		.file-detail-name {
+			width: 262px;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			font-size: 16px;
+			font-weight: 300;
 			color: #fff;
 		}
 
-		.subject-datetime {
+		.file-detail-extension {
 			font-size: 10px;
 			font-weight: 300;
-			color: #B5C4D3;
+			color: var(--gray-cement);
 		}
 
-		.subject-status {
-			font-size: 13px;
-			font-weight: 300;
-			color: #FF7070;
-		}
-
-		.text-comments {
-			font-size: 8px;
-			font-weight: 300;
-			color: #B5C4D3;
-		}
-
-		.btn-create-work {
-			width: 85px;
-			font-size: 10px;
-			font-weight: 700;
+		.btn-create {
+			width: 90px;
 			color: #fff;
-		}
-
-		.btn-delete-work {
-			width: 77px;
 			font-size: 13px;
-			font-weight: 700;
-			color: #fff;
+			margin-right: 30px;
 		}
 
-				/** Menu bar */
-				.menubar {
+		/** Menu bar */
+		.line {
+			width: 100%;
+			height: 1px;
+			background-color: var(--blue-ocean);
+		}
+
+		.menubar {
 			width: 379px;
 			height: 100%;
 			padding: 16px;
@@ -217,7 +263,33 @@ if(!isset($_SESSION["id"])) {
 		.profile-image {
 			border-radius: 50%;
 		}
+
 		.fileToUploadPhoto {
+			display: none;
+		}
+
+		.drop-down-edit {
+			position: relative;
+		}
+
+		.group-drop-down-edit {
+			visibility: hidden;
+
+			position: absolute;
+			margin-top: 8px;
+			margin-left: -50px;
+			width: 67px;
+			background-color: var(--gray-cement);
+		}
+
+		.drop-down-text {
+			font-size: 10px;
+			color: #fff;
+			padding: 4px;
+			text-align: right;
+		}
+
+		.file-assigment {
 			display: none;
 		}
 
@@ -292,67 +364,107 @@ if(!isset($_SESSION["id"])) {
 					Classroom
 				</a>
 			</div>
+		</div>
+		<?php
+		$class_id = $_GET["id"];
+		$query = "SELECT * FROM classroom a LEFT JOIN user b ON a.created_by = b.id WHERE a.id = $class_id AND deleted_at IS NULL";
+		$res = mysqli_query($con, $query);
+		while ($row = mysqli_fetch_array($res)) {
+			$isCreatedBy = 	$_SESSION['id'] == $row['created_by'];
+		?>
 		<div class="d-flex flex-column box-profile">
 			<div class="d-flex flex-grow-1 group-edit">
-				<button class="main-button edit-button text-center">edit</button>
+				<!-- <div class="d-flex flex-grow-1 group-edit">
+					<form action="./controller/upload_image_class_bg.php" method="post" enctype="multipart/form-data" class="d-flex justify-content-between" id="formUploadImageClassBg">
+							<input type="hidden" name="class_id" value="<?php echo $_GET['id']; ?>"/>
+							<input type="file" name="fileToUploadClassBg" id="fileToUploadClassBg" class="fileToUploadPhoto"/>
+							<button type="button" id="upload_image_class_bg" class="main-button edit-button text-center">edit</button>
+						</form>
+				</div> -->
+				<?php if($isCreatedBy) { ?>
+				<div class="drop-down-edit" id="show-drop-down">
+					<img src="imgs/menu_dots_vertical_free_icon_font.png" width="19" height="19"/>
+					<div class="d-flex flex-column group-drop-down-edit">
+						<div class="drop-down-text" id="dd-edit">
+							Edit
+						</div>
+						<div class="drop-down-text" id="dd-delete">
+							<a href="./controller/get-delete-classroom.php?type=classroom&&id=<?php echo $class_id ?>">Delete</a>
+						</div>
+					</div>
+				</div>
+				<?php } ?>
 			</div>
 			<div class="d-flex box-infomation-author">
 				<div class="d-flex flex-column align-items-center box-img-profile">
 					<div class="img-profile">
-						<img class="profile image-fit-width" src="<?php echo $row['photo'] ?? 'imgs/circle.png' ?>" width="131" height="131"/>
+						<img class="profile-image image-fit-width" src="<?php echo $row['photo'] ?? 'imgs/circle.png' ?>" width="131" height="131"/>
 					</div>
-					<button class="main-button btn-edit-photo text-center">edit photo</button>
+					<?php if($isCreatedBy) { ?>
+					<div class="mt-2"></div>
+					<form action="./controller/upload_image.php" method="post" enctype="multipart/form-data" class="d-flex justify-content-between" id="formUploadImage">
+						<input type="file" name="fileToUploadPhoto" id="fileToUploadPhoto" class="fileToUploadPhoto"/>
+						<button type="button" class="main-button btn-edit-photo" id="upload_image">upload photo</i>
+					</form>
+					<?php } ?>
 				</div>
 				<div class="d-flex flex-column box-subject">
 					<div class="text-title-code-subject text-header">
-						935432
+						<?php echo $row['subject_number']; ?>
 					</div>
 					<div class="text-desc-code-subject text-header">
-						Introduction to e-Business
+					<?php echo $row['classname']; ?>
 					</div>
 				</div>
 			</div>
 			<div class="d-flex flex-grow-1 box-author">
-					<div class="author">author</div>
-				</div>
+				<div class="author"><?php echo $row['firstname'].' '.$row['lastname']; ?></div>
+			</div>
 		</div>
+		<?php } ?>
+		<?php
+				$assigmentId = $_GET['assigment'];
+				$queryAssign = "SELECT * FROM assignment WHERE id = $assigmentId";
+				$resAssign = mysqli_query($con, $queryAssign);
+				while ($rowAssign = mysqli_fetch_array($resAssign)) {
+		?>
+		<form action="./controller/edit_assignment.php" method="post" enctype="multipart/form-data">
+		<input type="hidden" name="classroom_id" value="<?php echo $_GET['id']; ?>"/>
+		<input type="hidden" name="assignment_id" value="<?php echo $assigmentId; ?>"/>
 		<div class="box-content">
 			<div class="d-flex flex-column box-content-detail">
-				<div class="d-flex justify-content-between justify-content-center align-items-center" >
-					<div class="title">
-						Classwork
-					</div>
-					<button class="main-button btn-create-work text-center">Create work</button>
+				<div class="title">
+					Edit classwork
 				</div>
 				<div class="d-flex flex-column card-item">
-					<div class="d-flex justify-content-between justify-content-center align-items-center">
-						<div class="subject-title">
-							(งานกลุ่ม 3 คน) project 25 คะแนน
+					<div class="d-flex">
+						<div class="create-title">
+							Title
 						</div>
-						<div class="subject-datetime">
-							Aug 5, 2020
-						</div>
-						<div class="subject-status">
-							Missing
-						</div>
+						<input type="text" name="title" class="input-field field-title" value="<?php echo $rowAssign['title']; ?>"/>
 					</div>
-					<div class="text-comments">
-						comments
+					<div class="d-flex">
+						<div class="create-detail">
+							Detail
+						</div>
+						<textarea name="description" rows="4"><?php echo $rowAssign['description']; ?></textarea>
 					</div>
-				</div>
-				<div class="d-flex flex-column card-item">
-					<div class="d-flex justify-content-between justify-content-center align-items-center">
-						<div class="subject-title">
-							(งานกลุ่ม 3 คน) project 25 คะแนน
+					<div class="d-flex justify-content-between justify-content-center align-items-center box-footer">
+						<div class="d-flex group-file">
+							<input type="hidden" name="updateFileName" value="<?php echo $rowAssign['upload_file']; ?>"/>
+							<input type="file" name="fileAssigment" id="fileAssigment" class="file-assigment"/>
+							<button type="button" class="btn-add-file align-self-center" id="call_file">+ add file</button>
+							<div class="d-flex flex-column file-detail" id="file-detail">
+								<div class="file-detail-name" id="file-name"><?php echo $rowAssign['upload_file'] != null ? explode("/",$rowAssign['upload_file'])[2] : 'ชื่อไฟล์' ?></div>
+							</div>
 						</div>
-						<div class="subject-datetime">
-							Aug 5, 2020
-						</div>
-						<button class="main-button-outline btn-delete-work text-center">Delete</button>
+						<button type="submit" class="main-button btn-create text-center align-self-center">Edit</button>
 					</div>
 				</div>
 			</div>
 		</div>
+	</form>
+	<?php } ?>
 	</div>
 
 	<div class="d-flex flex-column menubar">
@@ -363,6 +475,7 @@ if(!isset($_SESSION["id"])) {
 			<img class="profile-image image-fit-width" src="<?php echo  $_SESSION['photo'] ?? 'imgs/circle.png' ?>" width="106" height="106"/>
 			<form action="./controller/upload_image.php" method="post" enctype="multipart/form-data" class="d-flex justify-content-between" id="formUploadImageSidebar">
 						<input type="file" name="fileToUploadPhoto" id="fileToUploadPhotoSidebar" class="fileToUploadPhoto"/>
+						<div class="mt-2"></div>
 						<button type="button"  class="main-button btn-edit-profile text-center" id="upload_image_sidebar">edit photo</button>
 			</form>
 		</div>
@@ -476,6 +589,27 @@ if(!isset($_SESSION["id"])) {
 			});
 		});
 
+		var isShow = false;
+		$("#show-drop-down").click(function() {
+			if(!isShow) {
+				$('.group-drop-down-edit').css('visibility', 'visible');
+			}
+			else {
+				$('.group-drop-down-edit').css('visibility', 'hidden');
+			}
+
+			isShow = !isShow;
+		});
+
+		$("#call_file").click(function() {
+			$("#fileAssigment").click();
+		});
+
+		$("#fileAssigment").on("change", function(e){
+			$('#file-detail').css('display', 'block');
+			$("#file-name").text(e.target.files[0].name);
+		});
+
 		$("#upload_image").click(function() {
 
 			$("#fileToUploadPhoto").click();
@@ -483,7 +617,6 @@ if(!isset($_SESSION["id"])) {
 				$("#formUploadImage").submit();
 			});
 		});
-
 		$("#dd-edit").click(function() {
 			$('.modal').css('display', 'block');
 		});

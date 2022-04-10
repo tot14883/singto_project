@@ -3,8 +3,10 @@
     session_start();
     $user_id = $_SESSION['id'];
     $title = $_POST["title"];
+		$assignmentId = $_POST["assignment_id"];
     $description = $_POST["description"];
     $classroom_id = $_POST["classroom_id"];
+		$updateFilename = $_POST['updateFileName'];
     $target_dir = "../files_class/";
     $target_file = $target_dir . basename($_FILES["fileAssigment"]["name"]);
     $uploadOk = 1;
@@ -16,15 +18,20 @@
     }
 
     if(basename($_FILES["fileAssigment"]["name"]) == '' || strlen(basename($_FILES["fileAssigment"]["name"])) <= 0) {
-        $query = "INSERT INTO `assignment` (`title`, `description`, `classroom_id`, `created_by`, `updated_by`) VALUES ('$title', '$description', '$classroom_id', '$user_id', '$user_id')";
-        $rescheck = mysqli_query($con, $query);
+				if(strlen($updateFilename) <= 0) {
+        	$query = "UPDATE `assignment` SET `title`='$title', `description`='$description', `classroom_id`='$classroom_id', `updated_by`='$user_id' WHERE id='$assignmentId'";
+				}
+				else {
+					$query = "UPDATE `assignment` SET `title`='$title', `description`='$description',  `upload_file`='$updateFilename', `classroom_id`='$classroom_id', `updated_by`='$user_id' WHERE id='$assignmentId'";
+				}
+				$rescheck = mysqli_query($con, $query);
         if ($rescheck) {
-            echo '<script>alert("Create Complete!");
+            echo '<script>alert("Edit Complete!");
             history.back();</script>';
             exit;
         }
         else {
-                echo '<script>alert("Create Uncomplete!");
+                echo '<script>alert("Edit Uncomplete!");
                 history.back();</script>';
                 exit;
         }
@@ -64,15 +71,15 @@
             $target_dir = "./files_class/";
             $target_file = $target_dir . basename($_FILES["fileAssigment"]["name"]);
             $userId = $_SESSION['id'];
-            $query = "INSERT INTO `assignment` (`title`, `description`, `upload_file`, `classroom_id`, `created_by`, `updated_by`) VALUES ('$title', '$description', '$target_file', '$classroom_id', '$user_id', '$user_id')";
+						$query = "UPDATE `assignment` SET `title`='$title', `description`='$description',  `upload_file`='$target_file', `classroom_id`='$classroom_id', `updated_by`='$user_id' WHERE id='$assignmentId'";
             $rescheck = mysqli_query($con, $query);
             if ($rescheck) {
-                echo '<script>alert("Create Complete!");
+                echo '<script>alert("Edit Complete!");
                 history.back();</script>';
                 exit;
             }
             else {
-                    echo '<script>alert("Create Uncomplete!");
+                    echo '<script>alert("Edit Uncomplete!");
                     history.back();</script>';
                     exit;
             }

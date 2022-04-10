@@ -17,7 +17,7 @@
     if ($rowcheck == null){
         if ($unhashpassword == $confirmpassword) {
             $password = password_hash($unhashpassword, PASSWORD_BCRYPT);
-            $query = "INSERT INTO user VALUES ('', '$firstname', '$lastname', '$email', '$password', '$date', '$date')";
+            $query = "INSERT INTO user (`firstname`, `lastname`, `email`, `password`, `created_at`, `updated_at`) VALUES ('$firstname', '$lastname', '$email', '$password', '$date', '$date')";
             mysqli_query($con, $query);
             echo '<script>alert("Registeration Complete!");
                     window.location = "../index.php";</script>';

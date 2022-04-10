@@ -24,6 +24,7 @@
                 $_SESSION["lastname"] = $objResult["lastname"];
                 $_SESSION["email"] = $objResult["email"];
                 $_SESSION["password"] = $objResult["password"];
+                $_SESSION["photo"] = $objResult["photo"];
                 session_write_close();
 				header("location:../home.php");
 			}
