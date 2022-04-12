@@ -417,7 +417,7 @@ if(!isset($_SESSION["id"])) {
 				<?php }
 				}else {
 					$class_id = $_GET["id"];
-					$queryAssign = "SELECT * FROM assignment a LEFT JOIN classroom b ON a.classroom_id = b.id LEFT JOIN assignment_user c ON c.assignment_id = a.id LEFT JOIN user d ON c.created_by = d.id";
+					$queryAssign = "SELECT * FROM assignment a LEFT JOIN classroom b ON a.classroom_id = b.id LEFT JOIN assignment_user c ON c.assignment_id = a.id LEFT JOIN user d ON c.created_by = d.id  WHERE b.id = $class_id";
 					$resAssign = mysqli_query($con, $queryAssign);
 					while ($rowAssign = mysqli_fetch_array($resAssign)) {
 				?>
